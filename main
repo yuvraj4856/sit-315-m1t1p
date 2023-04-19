@@ -1,27 +1,39 @@
+// Declare a variable to hold the distance in centimeters
 int cm = 0;
 
+// Function to measure the distance using an ultrasonic sensor
 int distance(int triggerPin, int echoPin)
 {
-  pinMode(triggerPin, OUTPUT);  
+  // Set the trigger pin as an output and the echo pin as an input
+  pinMode(triggerPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  // Send a 10 microsecond pulse on the trigger pin
   digitalWrite(triggerPin, LOW);
   delayMicroseconds(2);
-  
   digitalWrite(triggerPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(triggerPin, LOW);
-  pinMode(echoPin, INPUT);
+
+  // Measure the duration of the pulse on the echo pin and convert it to distance in microseconds
+  int duration = pulseIn(echoPin, HIGH);
   
-  return pulseIn(echoPin, HIGH);
+  // Convert the duration to distance in centimeters using the speed of sound (343 meters/second)
+  return duration / 2 * 0.0343;
 }
 
 void setup()
 {
+  // Start the serial communication at 9600 bits per second
   Serial.begin(9600);
 }
 
 void loop()
 {
-  cm = 0.01723 * distance(10, 10);
+  // Measure the distance and convert it to centimeters
+  cm = distance(10, 10) * 0.01723;
+
+  // Print the distance to the serial monitor
   Serial.print(cm);
   Serial.println("cm");
 }
